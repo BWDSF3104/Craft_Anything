@@ -1,6 +1,6 @@
 # craft-anything MCP 起動失敗: kilo.jsonc の command に `mcp` サブコマンドが無い
 
-**Status**: 修正済み・要再接続確認
+**Status**: 解決済み（2026-11-13 14:57 再起動後、connected・30 ツール・ask 動作まで実測。タスク close 済み）
 **Date**: 2026-11-13
 **発見**: 再起動後確認タスク（`docs/ai/tasks/2026-11-13-craft-anything-post-restart-check.md`）
 
@@ -31,6 +31,6 @@ message="server unavailable" key=craft-anything type=local status=failed
 
 修正後、probe 再実行で `INIT_OK True / craft-anything 0.6.1 / protocol 2025-06-18 / TOOL_COUNT 30` を実測。
 
-## 残課題
+## 教訓
 
-Kilo はプロジェクト MCP 設定をホットリロードしない（修正後も同 run では `server unavailable` のまま）。`/mcps` で再接続、または Kilo 再起動後に `craft-anything` connected とツール 30 件を確認するまでクローズしない。
+Kilo はプロジェクト MCP 設定をホットリロードしないため、修正後は Kilo 再起動が必要（再起動後に connected・ツール 30 件・ask 動作を実測し解決）。Kilo 側の登録成否は `opencode.log` の `key=craft-anything` エントリで確認できる。

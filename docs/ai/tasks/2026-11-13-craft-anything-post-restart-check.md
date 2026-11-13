@@ -1,6 +1,6 @@
 # Craft Anything 再起動後の接続・Skill 確認
 
-**Status**: 進行中
+**Status**: 完了
 **Date**: 2026-11-13
 **担当**: 新規セッション（Kilo 再起動後に実施）
 **Next Action**: /mcps で craft-anything をトグル再接続（または Kilo 再起動）→ connected・ツール30件・任意の read-only ツール 1 件の ask 確認 → 全通過なら end
@@ -33,20 +33,22 @@ MCP サーバー起動と handshake は導入セッションで実証済みだ�
 ## Verification
 
 （2026-11-13 14:50 実施セッションの実測。推測での完了判定なし）
-- [ ] `/mcps` で `craft-anything` connected、ツール数: **未達** — 本セッションの MCP ロードは失敗（下記 bug）。設定修正済みだが Kilo のホットリロードなし。再接続後に再確認
+- [x] `/mcps` で `craft-anything` connected、ツール数: **30** — 14:57 再起動後（run=f1004dce）。セッションに `craft-anything_*` 30 件登録、`core_session_show` が成功応答（server 0.6.1 / clean-room）。新 run のログに MCP 起動エラーなし
 - [x] skills に `craft-anything-workflow` 表示 — 本セッションの skills 一覧に `S:\Documents\Craft_Anything\.kilo\skills\craft-anything-workflow\SKILL.md` として認識済み（実ロードで確認）
-- [ ] （任意）ツール 1 件で ask 表示 — 未実施（ツール未登録のため不可。再接続後に実施）
-- [x] グローバル設定・skills・PATH・レジストリに追加なし — `~/.config/kilo`・`~/.kilo`・`~/.agents/skills` 内 grep に craft-anything ヒット 0、`PATH` に該当 0、Uninstall レジストリ（HKCU/HKLM/HKLM WOW6432Node）に該当 0
+- [x] （任意）ツール 1 件で ask 表示 — `core_session_show` 実行時ログに `evaluated ... action.action=ask action.source=project` → `asking` → 承認後に実行成功。生成データは `.tools\craft-anything\project.cany\journal\2026-11-13.jsonl`（プロジェクト内）
+- [x] グローバル設定・skills・PATH・レジストリに追加なし — `~/.config/kilo`・`~/.kilo`・`~/.agents/skills` 内 grep に craft-anything ヒット 0、`PATH` に該当 0、Uninstall レジストリ（HKCU/HKLM/HKLM WOW6432Node）に該当 0。User profile/AppData の `*craft*` 2 件は 2020/2021 年作成の Minecraft 関連（作成日時が導入より前）で無関係
+
+**最終結果（14:57 再起動後）: 全項目 OK。bug 修正後の `.kilo/kilo.jsonc` で connected（30 ツール）・ask 動作・データ局所性・グローバル非変更を実測し close。**
 
 ### 発見した bug と修正（blocker・本セッションで修正）
 
 - 症状: 起動時ログに `mcp stderr key=craft-anything output="error: unexpected argument '--inbox' found"` → `server unavailable status=failed`、Kilo にツール 0 件。
 - 原因: `.kilo/kilo.jsonc` の `command` に必須の `mcp` サブコマンドが無く、`--inbox`（mcp サブコマンド専用オプション）がトップレベルに渡されていた。clap が usage error で即終了。
 - 修正: `command` の 2 番目に `"mcp"` を挿入。修正後、`docs/ai/tmp/mcp_probe.py`（修正後と同一の引数構成）で再検証 → `INIT_OK True / craft-anything 0.6.1 / protocol 2025-06-18 / TOOL_COUNT 30`。
-- 詳細: `docs/ai/known-issues/2026-11-13-craft-anything-mcp-command-missing-mcp-subcommand.md`
+- 詳細: `docs/ai/known-issues/archive/2026-11-13-craft-anything-mcp-command-missing-mcp-subcommand.md`（解決済みのため archive へ移動済み）
 - 備考: server 側の起動・initialize・tools/list(30) は導入済みで実証。ここは Kilo ロード後の「認識」確認。
 
 ## 完了時 Memory Bank 操作
 
-- [ ] `task_manager end --task craft-anything-post-restart-check`（`current-task.tsv` の参照行を削除）
-- [ ] 失敗・既知問題があれば `known-issues/` に記録（blocker でなければ本タスクは close 可）
+- [x] `task_manager end --task craft-anything-post-restart-check`（`current-task.tsv` の参照行を削除）
+- [x] 失敗・既知問題があれば `known-issues/` に記録（blocker でなければ本タスクは close 可）

@@ -1,2 +1,1 @@
 task_file	status	next_action
-docs/ai/tasks/2026-11-13-craft-anything-post-restart-check.md	進行中	/mcps で craft-anything をトグル再接続（または Kilo 再起動）→ connected・ツール30件・任意の read-only ツール 1 件の ask 確認 → 全通過なら end
