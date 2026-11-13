@@ -1,0 +1,29 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "mcp": {
+    // Craft Anything（プロジェクト内ポータブルバイナリのみ。グローバル非インストール）
+    "craft-anything": {
+      "type": "local",
+      "command": [
+        "S:\\Documents\\Craft_Anything\\.tools\\craft-anything\\0.6.1\\craft-anything-0.6.1-windows-x64-portable\\craft-anything-cli.exe",
+        // mcp サブコマンド必須（無いと clap が usage error で起動失敗）
+        "mcp",
+        // クリーンルーム既定: 実行中は常にターゲット内部を読まない
+        "--clean-room",
+        // evidence / memory / journal をプロジェクト内へ置く（無ければ作成）
+        "--project",
+        "S:\\Documents\\Craft_Anything\\.tools\\craft-anything\\project.cany",
+        // person への質問・承認の投函先（core_person_ask / core_action_approve）
+        "--inbox",
+        "S:\\Documents\\Craft_Anything\\.tools\\craft-anything\\inbox"
+        // --all-tools を付けない → Essentials + 有効 toolset のみ公開（全ツール一括公開を回避）
+      ],
+      "enabled": true,
+      "timeout": 15000
+    }
+  },
+  "permission": {
+    // 既定は要承認で全ツールの自動公開を抑制し、必要なツールから段階的に許可する
+    "craft-anything_*": "ask"
+  }
+}
